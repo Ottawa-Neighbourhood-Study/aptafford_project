@@ -49,6 +49,7 @@ table_write <- tryCatch ({
                         password = 'e99b504fe94d80decadd966910b2065a0f4c540dedab90f9')
 
   #DBI::dbListTables(con)
+  # dplyr::select(dplyr::tbl(con, "realtorca_new"), date_scraped)
   dplyr::copy_to(con, newdata, name = "realtorca_new", overwrite = TRUE,  temporary = FALSE )
   DBI::dbDisconnect(con)
 }, error = function(e) {print(e); e})
