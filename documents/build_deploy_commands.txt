@@ -1,0 +1,6 @@
+# INGESTION APP
+# to build docker image, go to directory and enter commands
+docker build -t aptafford.00.ingest .
+
+# to deploy to fly.io
+flyctl deploy --local-only -i aptafford.00.ingest
