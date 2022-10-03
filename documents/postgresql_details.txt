@@ -1,0 +1,8 @@
+Creating postgres cluster aptafford-db in organization ottawa-neighbourhood-study
+Postgres cluster aptafford-db created
+Username:    postgres
+Password:    e99b504fe94d80decadd966910b2065a0f4c540dedab90f9
+Hostname:    aptafford-db.internal
+Proxy Port:  5432
+PG Port: 5433
+Save your credentials in a secure place, you won't be able to see them again!
