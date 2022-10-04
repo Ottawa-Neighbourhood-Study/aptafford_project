@@ -22,6 +22,8 @@ Sys.setenv('LOGDRIVER_APPNAME'='aptafford_project')
 db_url <- "localhost"
 db_url <- "aptafford-db.internal"
 
+db_password <- 'e99b504fe94d80decadd966910b2065a0f4c540dedab90f9'
+
 appname <- "aptafford_ingestion"
 username <- "ingest"
 
@@ -46,7 +48,7 @@ table_write <- tryCatch ({
                         host = db_url, # i.e. 'ec2-54-83-201-96.compute-1.amazonaws.com'
                         port = 5432, # or any other port specified by your DBA
                         user = 'postgres',
-                        password = 'e99b504fe94d80decadd966910b2065a0f4c540dedab90f9')
+                        password = db_password)
 
   #DBI::dbListTables(con)
   # dplyr::select(dplyr::tbl(con, "realtorca_new"), date_scraped)
