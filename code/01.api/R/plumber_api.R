@@ -11,13 +11,13 @@ library(RPostgres)
 library(promises)
 library(future)
 library(logdriver)
-#library(plumber)
+library(plumber)
 
 # Sys.setenv('LOGDRIVER_HOST'='logdriver-test.fly.dev')
 # Sys.setenv('LOGDRIVER_PORT'='8000')
 # Sys.setenv('LOGDRIVER_APPNAME'='aptafford_project')
 
-username <- "aptafford_api"
+username <- "api"
 
 
 #* @apiTitle Ottawa/ONS Apartment Affordability Project: Data Out

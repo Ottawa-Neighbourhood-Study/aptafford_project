@@ -32,4 +32,4 @@ RUN cp cron/* /etc/periodic/daily
 EXPOSE 8080
 
 # Run cron in the background, run plumber API for status and debug log checks in the foreground
-CMD crond -l 0 -L /var/log/cron.log && R -q -e 'plumber::pr_run(plumber::pr("R/plumber_ingest.R"), port=8080, host = "0.0.0.0")'
+CMD crond -l 8 -L /var/log/cron.log && R -q -e 'plumber::pr_run(plumber::pr("R/plumber_ingest.R"), port=8080, host = "0.0.0.0")'
