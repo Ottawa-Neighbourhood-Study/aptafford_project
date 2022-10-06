@@ -1,0 +1,3 @@
+#!/bin/sh
+# purge cron logs weekly
+rm /var/log/cron.log
