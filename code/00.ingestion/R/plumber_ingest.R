@@ -25,6 +25,10 @@ function(){
 #* @get /sessioninfo
 function(){
 
+  s <- capture.output(print(sessionInfo()))
+
+  s <- paste0(s, collapse = "\n")
+
   list(timestamp = Sys.time(),
-       result = utils::sessionInfo())
+       result = s)
 }

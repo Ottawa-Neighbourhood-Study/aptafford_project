@@ -43,6 +43,19 @@ function() {
  return(result)
 }
 
+#*  Show R session info
+#* @get /sessioninfo
+function(){
+
+  s <- capture.output(print(sessionInfo()))
+
+  s <- paste0(s, collapse = "\n")
+
+  list(timestamp = Sys.time(),
+       result = s)
+}
+
+
 #* Get daily apartment listings from various sources.
 #*
 #* This is where a longer description would go.
