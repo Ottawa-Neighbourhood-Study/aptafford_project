@@ -109,6 +109,18 @@ cleandata_try <- tryCatch({
     add_nad_sf() %>%
     dplyr::mutate(dplyr::across(-"geometry", as.character))
 
+# also! rentals.ca includes some house duplicates: houses and townhouses listed more than once. here we clear them out
+  rentalsca_clean <- rentalsca_clean %>%
+    dplyr::mutate(house = stringr::str_detect(property_type,  "house")) %>%
+    dplyr::group_by(address, bedrooms, bathrooms, rent) %>%
+    dplyr::mutate(n=n()) %>%
+    dplyr::mutate(house_count = if_else(house, n, 1L)) %>%
+    dplyr::mutate(need_trim = house_count > 1) %>%
+    tidyr::nest(data = -need_trim) %>%
+    dplyr::mutate(data = if_else(need_trim, purrr::map(data, slice_head, n=1), data)) %>%
+    tidyr::unnest(cols = "data") %>%
+    dplyr::select(-need_trim, -house, -n, -house_count)
+
 
   ### realtor.ca ----
 
