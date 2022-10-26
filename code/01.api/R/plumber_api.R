@@ -13,9 +13,9 @@ library(future)
 library(logdriver)
 library(plumber)
 
-# Sys.setenv('LOGDRIVER_HOST'='logdriver-test.fly.dev')
-# Sys.setenv('LOGDRIVER_PORT'='8000')
-# Sys.setenv('LOGDRIVER_APPNAME'='aptafford_project')
+Sys.setenv('LOGDRIVER_HOST'='logdriver-test.fly.dev')
+Sys.setenv('LOGDRIVER_PORT'='8000')
+Sys.setenv('LOGDRIVER_APPNAME'='aptafford_project')
 
 username <- "api"
 
@@ -47,14 +47,24 @@ function() {
 #*
 #* This is where a longer description would go.
 #*
-#* @param source The data source. "rentalsca" for Rentals.ca, "realtorca" for Realtor.ca.
+#* @param source The data source, default is all daily consolidated values.
+#* Accepted values "all", "rentalsca", "realtorca", "kijiji", "padmapper".
+#*  "padmapper.
 #* @get /daily_units
 #* @response 200 A dataframe of apartment data.
-function(source) {
+function(source="all") {
 
   # TODO FIXME input  validation
-  if (! source %in% c("rentalsca", "realtorca")) stop ("Invalid source. Accepted values are 'rentalsca' and 'realtorca'.")
-  db_name <- paste0(source, "_new")
+  if (! source %in% c("all","kijiji","padmapper", "rentalsca", "realtorca")) stop ("Invalid source. Accepted values are 'rentalsca' and 'realtorca'.")
+
+  db_name <- switch(source,
+                    "all" = "daily_results",
+                    "kijiji" = "kijiji_new",
+                    "rentalsca" = "rentalsca_new",
+                    "padmapper" = "padmapper_new",
+                    "realtorca" = "realtorca_new")
+
+
 
   # we do the whole thing in a future_promise for concurrency
   result <- promises::future_promise({
@@ -75,19 +85,6 @@ function(source) {
     # get pointer to specific table in the database
     db_values <- dplyr::tbl(con, db_name)
 
-
-
-    # if (!all(is.na(cylinders))){
-    #   result <- result %>%
-    #     dplyr::filter(cyl %in% cylinders) # %in% works for numeric!!
-    #   #dplyr::filter(cyl %like% cylinders) # this is for regexes I think https://www.prisma.io/dataguide/postgresql/reading-and-querying-data/filtering-data
-    # }
-    #
-    # if (!all(is.na(min_hp))){
-    #   result <- result %>%
-    #     dplyr::filter(hp >= min_hp)
-    # }
-
     result <- dplyr::collect(db_values)
 
     logdriver::add_log(event = "API query successful", description = sprintf("source=%s", db_name), username = username)
@@ -95,7 +92,7 @@ function(source) {
     DBI::dbDisconnect(con)
 
     result
-  })
+  }, seed = TRUE)
 
   return(result)
 }
