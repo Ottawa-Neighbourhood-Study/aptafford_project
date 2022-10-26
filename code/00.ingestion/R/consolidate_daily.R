@@ -105,9 +105,7 @@ cleandata_try <- tryCatch({
     dplyr::mutate(unique_id = sprintf("rn-%s-%s", location_id, id)) %>%
     dplyr::select(title, property_type, bedrooms, bathrooms, rent, address = address1,
                   lat, lon = lng, unique_id, url, date_scraped) %>%
-    dplyr::mutate(source = "rentals.ca") %>%
-    add_nad_sf() %>%
-    dplyr::mutate(dplyr::across(-"geometry", as.character))
+    dplyr::mutate(source = "rentals.ca")
 
 # also! rentals.ca includes some house duplicates: houses and townhouses listed more than once. here we clear them out
   rentalsca_clean <- rentalsca_clean %>%
@@ -119,7 +117,9 @@ cleandata_try <- tryCatch({
     tidyr::nest(data = -need_trim) %>%
     dplyr::mutate(data = if_else(need_trim, purrr::map(data, slice_head, n=1), data)) %>%
     tidyr::unnest(cols = "data") %>%
-    dplyr::select(-need_trim, -house, -n, -house_count)
+    dplyr::select(-need_trim, -house, -n, -house_count) %>%
+    add_nad_sf() %>%
+    dplyr::mutate(dplyr::across(-"geometry", as.character))
 
 
   ### realtor.ca ----
