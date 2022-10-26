@@ -1,3 +1,5 @@
+library(logdriver)
+library(aptafford)
 #* Confirm Vm is running
 #* @get /status
 function(){
@@ -16,4 +18,13 @@ function(){
 
   list(timestamp = Sys.time(),
        result = result)
+}
+
+
+#*  Show R session info
+#* @get /sessioninfo
+function(){
+
+  list(timestamp = Sys.time(),
+       result = utils::sessionInfo())
 }
