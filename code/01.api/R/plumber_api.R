@@ -30,6 +30,19 @@ db_url <- "aptafford-db.internal"
 
 db_password <- 'e99b504fe94d80decadd966910b2065a0f4c540dedab90f9'
 
+
+#* Give basic health check--confirm API is working.
+#*
+#*
+#* @get /status
+#* @response 200 "OK"
+function() {
+ result <- list(status = "OK",
+                timestamp = Sys.time())
+
+ return(result)
+}
+
 #* Get daily apartment listings from various sources.
 #*
 #* This is where a longer description would go.

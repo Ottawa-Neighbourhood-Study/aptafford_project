@@ -4,3 +4,10 @@ docker build -t aptafford.00.ingest .
 
 # to deploy to fly.io
 flyctl deploy --local-only -i aptafford.00.ingest
+
+
+# API
+
+docker build -t aptafford.01.api .
+
+flyctl deploy --local-only -i aptafford.00.ingest

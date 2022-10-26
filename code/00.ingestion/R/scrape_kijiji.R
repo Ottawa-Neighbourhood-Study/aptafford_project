@@ -32,12 +32,22 @@ username <- "ingest"
 
 logdriver::add_log(level = "info", event = "Kijiji: Begin scraping", username = username)
 
-newdata <- tryCatch(aptafford::kijiji_scrape(num_pages = 40),
-                    error = function(e) e)
+scrape_attempt <- 1
 
-if ("error" %in% colnames(newdata)){
-  logdriver::add_log(level = "critical", event = "Kijiji: Scraping failed", username = username)
-  return (0)
+for (scrape_attempt in 1:5){
+  scrape_success <- FALSE
+
+  newdata <- tryCatch(aptafford::kijiji_scrape(num_pages = 40),
+                      error = function(e) e)
+
+  # we have succeeded if we get a tibble
+  if ((!"error" %in% colnames(newdata)) & (!all(is.null(newdata))) ) scrape_success <- TRUE
+
+  if (scrape_success == TRUE) break
+
+  logdriver::add_log(level = "critical", event = sprintf("Kijiji: Scraping attempt #%s failed", scrape_attempt), username = username,
+                     description = substring(paste0(as.character(head(newdata)), collapse=""), first=1, last = 200))
+
 }
 
 logdriver::add_log( event = "Kijiji: Scraping complete",
