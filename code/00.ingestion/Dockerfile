@@ -68,7 +68,7 @@ apk del gcc musl-dev g++ linux-headers autoconf
 COPY . .
 
 # PUT SCHEDULED SCRIPTS INTO THE CORRECT CRON FOLDERS TO RUN REGULARLY
-RUN cp cron/scrape/05-consolidate-daily /etc/periodic/hourly
+#RUN cp cron/scrape/05-consolidate-daily /etc/periodic/hourly
 #RUN cp cron/* /etc/periodic/15min
 RUN cp cron/scrape/* /etc/periodic/daily
 RUN cp cron/cleanup/* /etc/periodic/weekly
