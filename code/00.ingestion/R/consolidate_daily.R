@@ -69,19 +69,12 @@ table_read <- tryCatch ({
                         user = 'postgres',
                         password = db_password)
 
-
-  con <- DBI::dbConnect(RPostgres::Postgres(),
-                        dbname = 'postgres',
-                        host = db_url,#'localhost', # i.e. 'ec2-54-83-201-96.compute-1.amazonaws.com'
-                        port = 5432, # or any other port specified by your DBA
-                        user = 'postgres',
-                        password = db_password)
-
-
   rn <- dplyr::tbl(con, "rentalsca_new") %>% dplyr::collect()
   re <- dplyr::tbl(con, "realtorca_new") %>% dplyr::collect()
   pm <- dplyr::tbl(con, "padmapper_new") %>% dplyr::collect()
   kj <- dplyr::tbl(con, "kijiji_new")    %>% dplyr::collect()
+
+  DBI::dbDisconnect(con)
 
   TRUE
 }, error = function(e) {print(e); e})
