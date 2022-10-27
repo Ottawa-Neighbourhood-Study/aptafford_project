@@ -193,6 +193,7 @@ if ("error" %in% class(cleandata_try)){
 # we clean each data source individually to remove within-source duplicates
 # then rely on geographic boundaries to avoid inter-source duplicates
 # we also filter out vacant land, and rents under 10$ and over 10,000$
+# we combine a few categories from different sources (e.g. "duplex" -> "duplex/triplex")
 
 consolidation <- tryCatch({
   rentalsca_clean %>%
@@ -209,7 +210,11 @@ consolidation <- tryCatch({
     dplyr::filter(!property_type %in% "Vacant Land") %>%
     dplyr::mutate(property_type = dplyr::if_else(is.na(property_type), "unspecified", tolower(property_type))) %>%
     dplyr::filter(as.numeric(rent) > 10,
-           as.numeric(rent) < 10000)
+           as.numeric(rent) < 10000) %>%
+    dplyr::mutate(property_type = dplyr::case_when(
+      property_type == "duplex" ~ "duplex/triplex",
+      property_type == "town house" ~ "townhouse"
+    ))
 
 }, error = function(e) {print(e); e})
 
