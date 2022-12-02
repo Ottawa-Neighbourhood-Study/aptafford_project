@@ -72,7 +72,7 @@ COPY . .
 #RUN cp cron/* /etc/periodic/15min
 RUN cp cron/scrape/* /etc/periodic/daily
 RUN cp cron/cleanup/* /etc/periodic/weekly
-
+RUN cp cron/consolidate/* /etc/periodic/weekly
 
 EXPOSE 8080
 
