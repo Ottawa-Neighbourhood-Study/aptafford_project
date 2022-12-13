@@ -8,6 +8,7 @@ flyctl deploy --local-only -i aptafford.00.ingest
 
 # API
 
-docker build -t aptafford.01.api .
+docker build -t aptafford.01.api:<<VERSION CODE>> .
 
-flyctl deploy --local-only -i aptafford.00.ingest
+flyctl deploy --local-only -i aptafford.01.api:<<VERSION CODE>>
+

@@ -26,10 +26,56 @@ username <- "api"
 
 future::plan(future::multisession())
 
+
+# for a bigger implementation would not store these values in the source code
 db_url <- "aptafford-db.internal"
 
 db_password <- 'e99b504fe94d80decadd966910b2065a0f4c540dedab90f9'
+authorized_tokens <- c("56ab24c15b72a457069c5ea42fcfc640")
 
+
+
+#* testing bearer auth
+#*
+#* @get /authtest
+function(req, res){
+
+
+  # https://swagger.io/docs/specification/authentication/bearer-authentication/
+
+  response <- "failure"
+
+  token <- req$HTTP_AUTHORIZATION
+
+  if (is.null(token)) token <- "nope"
+  token <- tolower(token)
+
+  # must include 'Bearer' in the token
+  # remove whitespace
+  if (!grepl(x=token, pattern="bearer")) token <- "nope"
+  token <- gsub(x = token, pattern = "bearer", replacement = "")
+  token <- gsub(x = token, pattern = "\\s", replacement = "")
+
+  # debugging
+  print(token)
+  print(authorized_tokens)
+
+  #  check against authorized token list
+  if (!token %in% authorized_tokens) {
+    res$status <- 403
+
+    logdriver::add_log(level = "error" , event = "/authtest", description = "Failure: Unauthorized API call", username = username)
+
+    stop("Unauthorized")
+    #return()
+  }
+
+  # will only get here if token is in authorized_tokens
+  response <- "Success"
+  logdriver::add_log(level = "info" , event = "/authtest", description = "Success: Authorized API call", username = username)
+
+  return (response)
+}
 
 #* Give basic health check--confirm API is working.
 #*
@@ -91,7 +137,7 @@ function(source="all") {
 
     # FIXME check that db connection is valid
     if (!DBI::dbIsValid(con)){
-      logdriver::add_log(event_level = "critical", event = "API Query failure", description = "Cannot connect to database", username = username)
+      logdriver::add_log(level = "critical", event = "API Query failure", description = "Cannot connect to database", username = username)
       return(NULL)
     }
 
