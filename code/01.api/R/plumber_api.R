@@ -34,16 +34,8 @@ db_password <- 'e99b504fe94d80decadd966910b2065a0f4c540dedab90f9'
 authorized_tokens <- c("56ab24c15b72a457069c5ea42fcfc640")
 
 
-
-#* testing bearer auth
-#*
-#* @get /authtest
-function(req, res){
-
-
-  # https://swagger.io/docs/specification/authentication/bearer-authentication/
-
-  response <- "failure"
+# Check bearer authorization against list of accepted tokens
+check_auth <- function(req, res){
 
   token <- req$HTTP_AUTHORIZATION
 
@@ -67,8 +59,17 @@ function(req, res){
     logdriver::add_log(level = "error" , event = "/authtest", description = "Failure: Unauthorized API call", username = username)
 
     stop("Unauthorized")
-    #return()
   }
+}
+
+#* testing bearer auth
+#*
+#* @get /authtest
+function(req, res){
+
+
+  # https://swagger.io/docs/specification/authentication/bearer-authentication/
+  check_auth(req, res)
 
   # will only get here if token is in authorized_tokens
   response <- "Success"
@@ -111,7 +112,7 @@ function(){
 #*  "padmapper.
 #* @get /daily_units
 #* @response 200 A dataframe of apartment data.
-function(source="all") {
+function(req, res, source="all") {
 
   # TODO FIXME input  validation
   if (! source %in% c("all","kijiji","padmapper", "rentalsca", "realtorca")) stop ("Invalid source. Accepted values are 'rentalsca' and 'realtorca'.")
