@@ -62,7 +62,9 @@ check_auth <- function(req, res){
   }
 }
 
-#* testing bearer auth
+#* Endpoint for testing bearer authentication.
+#*
+#* Supply the bearer token in the header "Authorization" with value "Bearer <token>".
 #*
 #* @get /authtest
 function(req, res){
@@ -105,17 +107,20 @@ function(){
 
 #* Get daily apartment listings from various sources.
 #*
-#* This is where a longer description would go.
+#* Returns a json object containing daily consolidated apartment listings from
+#* up to four sources: Rentals.ca, Realtor.ca, Kijiji, and Padmapper. Results are
+#* consolidated using matching based on apartment features and geospatial filtering.
 #*
-#* @param source The data source, default is all daily consolidated values.
+#* @param source The data source. Dfault is all daily consolidated values.
 #* Accepted values "all", "rentalsca", "realtorca", "kijiji", "padmapper".
 #*  "padmapper.
 #* @get /daily_units
 #* @response 200 A dataframe of apartment data.
 function(req, res, source="all") {
 
+
   # TODO FIXME input  validation
-  if (! source %in% c("all","kijiji","padmapper", "rentalsca", "realtorca")) stop ("Invalid source. Accepted values are 'rentalsca' and 'realtorca'.")
+  if (! source %in% c("all","kijiji","padmapper", "rentalsca", "realtorca")) stop ("Invalid source. Accepted values are 'all', 'rentalsca',  'realtorca', 'padmapper', and 'kijiji'.")
 
   db_name <- switch(source,
                     "all" = "daily_results",
