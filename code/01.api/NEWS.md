@@ -1,4 +1,8 @@
-# aptafford.api v0.1..5
+# aptafford.api v0.1.6
+
+* Add bearer authentication to /daily_units endpoint.
+
+# aptafford.api v0.1.5
 
 * New endpoint: /authtest, testing simple bearer authentication
 
