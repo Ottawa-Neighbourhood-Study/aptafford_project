@@ -118,6 +118,8 @@ function(){
 #* @response 200 A dataframe of apartment data.
 function(req, res, source="all") {
 
+  # check bearer authentication
+  check_auth(req, res)
 
   # TODO FIXME input  validation
   if (! source %in% c("all","kijiji","padmapper", "rentalsca", "realtorca")) stop ("Invalid source. Accepted values are 'all', 'rentalsca',  'realtorca', 'padmapper', and 'kijiji'.")
